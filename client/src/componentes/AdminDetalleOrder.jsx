@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useSelector } from "react-redux";
 import Axios from 'axios';
 import Swal from 'sweetalert2';
@@ -9,10 +9,8 @@ export default function AdminDetalleOrder() {
     const orderData = useSelector(state => state.purchaseData)
     const purchaseProducts = useSelector(state => state.purchaseProducts)
     const adressId = useSelector(state => state.adressId);
-    const [data, setData] = useState({
-
-    });
     let suma = 0
+
     purchaseProducts.forEach(element => {
         suma = suma + (element.cart.price * element.cart.amount)
     });
@@ -30,7 +28,7 @@ export default function AdminDetalleOrder() {
         let json = {
             state: 'entregada'
         }
-        const res = await Axios.put(`http://localhost:3001/order/${orderData.id}`, json, {
+        await Axios.put(`http://localhost:3001/order/${orderData.id}`, json, {
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -61,7 +59,7 @@ export default function AdminDetalleOrder() {
                 let json = {
                     state: 'cancelada'
                 }
-                const res = await Axios.put(`http://localhost:3001/order/${orderData.id}`, json, {
+                await Axios.put(`http://localhost:3001/order/${orderData.id}`, json, {
                     headers: {
                         'Content-Type': 'application/json'
                     }

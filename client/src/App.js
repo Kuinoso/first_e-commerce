@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Catalogo from './componentes/catalogo'
 import Producto from './componentes/Producto'
 import Review from './componentes/Review'
@@ -23,13 +23,11 @@ import TablaOrder from './componentes/tablaOrden.js';
 import CarritoGuest from './componentes/CarritoGuest'
 import Order from './componentes/Order.jsx'
 import DetalleOrder from './componentes/DetalleOrder';
-import Colaboradores from './componentes/colaboradores';
 import ResumenCompra from './componentes/ResumenCompra';
 import AgregarDireccion from './componentes/AgregarDireccion';
 import EditarDireccion from './componentes/EditarDireccion';
 import AprovedPurchase from './componentes/AprovedPurchase'
 import SeguridadUser from './componentes/SeguridadUser'
-import StarRating from './componentes/rating.js'
 import AdminDetalleOrder from './componentes/AdminDetalleOrder'
 import UseraAdmin from './componentes/useraAdmin';
 import SuperSimpleNavbarAd from './componentes/SuperSimpleNavbarAdmin';
@@ -40,11 +38,11 @@ import PutReview from './componentes/modificarReview'
 
 
 function App() {
-  const user = useSelector(state=> state.userId.role)
-  const login = useSelector(state=> state.loggedIn)
+  const user = useSelector(state => state.userId.role)
+  const login = useSelector(state => state.loggedIn)
 
   const protection = (component) => {
-   return !login ? <Redirect to='/user/login'/> : user !== 'Admin' ? <Redirect to='/' /> : component
+    return !login ? <Redirect to='/user/login' /> : user !== 'Admin' ? <Redirect to='/' /> : component
   }
 
 
@@ -89,27 +87,27 @@ function App() {
 
       <Route
         exact path='/admin/addproduct'
-        render={() => protection(<AddProduct/>)}
+        render={() => protection(<AddProduct />)}
       />
 
       <Route
         exact path='/admin/addcategory'
-        render={() => protection(<AddCategory/>)}
+        render={() => protection(<AddCategory />)}
       />
 
       <Route
         exact path='/admin/editordelete/:id'
-        render={() => protection(<Editordelete/>)}
+        render={() => protection(<Editordelete />)}
       />
 
       <Route
         exact path='/admin/editordelete/cat/:id'
-        render={() => protection(<Categoria/>)}
+        render={() => protection(<Categoria />)}
       />
 
       <Route
         exact path='/admin'
-        render={() => protection(<Admin/>)}
+        render={() => protection(<Admin />)}
       />
 
       <Route
@@ -126,17 +124,17 @@ function App() {
 
       <Route
         exact path='/products/prod/admin/:id'
-        render={() => protection(<AdminProducto/>)}
+        render={() => protection(<AdminProducto />)}
       />
 
       <Route
         exact path='/admin/products'
-        render={() => protection(<SuperSimpleNavbarAd/>)}
+        render={() => protection(<SuperSimpleNavbarAd />)}
       />
 
       <Route
         exact path='/admin/products'
-        render={() => protection(<AdminCatalogo/>)}
+        render={() => protection(<AdminCatalogo />)}
       />
 
       <Route
@@ -153,7 +151,7 @@ function App() {
 
       <Route
         exact path='/admin/orderlist'
-        render={() => protection(<TablaOrder/>)}
+        render={() => protection(<TablaOrder />)}
       />
 
       <Route
@@ -204,11 +202,6 @@ function App() {
       />
 
       <Route
-        exact path='/colaboradores'
-        render={() => <Colaboradores
-        />}
-      />
-      <Route
         exact path='/user/:id/order/:nombre/segurity'
         render={() => <SeguridadUser
         />}
@@ -223,7 +216,7 @@ function App() {
 
       <Route
         exact path='/admin/selectedOrder/:idOrden'
-        render={() => protection(<AdminDetalleOrder/>)}
+        render={() => protection(<AdminDetalleOrder />)}
 
       />
 

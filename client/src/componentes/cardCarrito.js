@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from 'react-router-dom';
 import axios from 'axios'
-import { Row, Col, Button } from 'react-bootstrap';
 import { getDbCart } from '../Redux/Actions/actions';
 import Swal from 'sweetalert2'
 
@@ -23,12 +21,12 @@ export default function CardCarrito(props) {
             productId: parseInt(targetInfo[0]),
             amount: parseInt(targetInfo[1]) + 1
         }
-        const res = await axios.put(`http://localhost:3001/user/${userData.id}/cart`, dataP, {
+        await axios.put(`http://localhost:3001/user/${userData.id}/cart`, dataP, {
             headers: {
                 'Content-Type': 'application/json'
             }
-        }).then(async (resp) => {
-            const rous = await axios.get(`http://localhost:3001/order/cart/${activeOrder[0].id}`)
+        }).then(async () => {
+            await axios.get(`http://localhost:3001/order/cart/${activeOrder[0].id}`)
                 .then((resp) => {
                     let response = Object.values(resp.data)
                     dispatch(getDbCart(response))
@@ -36,13 +34,9 @@ export default function CardCarrito(props) {
                         ...data,
                         amount: data.amount + 1
                     })
-
                 })
-
         })
     }
-
-
 
     const downAmount = async (e) => {
         e.preventDefault();
@@ -53,12 +47,12 @@ export default function CardCarrito(props) {
             amount: parseInt(targetInfo[1]) - 1
 
         }
-        const ros = await axios.put(`http://localhost:3001/user/${userData.id}/cart`, dataP, {
+        await axios.put(`http://localhost:3001/user/${userData.id}/cart`, dataP, {
             headers: {
                 'Content-Type': 'application/json'
             }
-        }).then(async (resp) => {
-            const rous = await axios.get(`http://localhost:3001/order/cart/${activeOrder[0].id}`)
+        }).then(async () => {
+            await axios.get(`http://localhost:3001/order/cart/${activeOrder[0].id}`)
                 .then((resp) => {
                     let response = Object.values(resp.data)
                     dispatch(getDbCart(response))
@@ -66,22 +60,18 @@ export default function CardCarrito(props) {
                         ...data,
                         amount: data.amount - 1
                     })
-
                 })
-
         })
-
         if (dataP.amount <= 0) {
             return
         }
-
     }
 
     const handDel = async (e) => {
         e.preventDefault();
-        const ris = await axios.delete(`http://localhost:3001/user/${userData.id}/cart/${e.target.value}/${activeOrder[0].id}`)
-            .then(async (resp) => {
-                const reis = await axios.get(`http://localhost:3001/order/cart/${activeOrder[0].id}`)
+        await axios.delete(`http://localhost:3001/user/${userData.id}/cart/${e.target.value}/${activeOrder[0].id}`)
+            .then(async () => {
+                await axios.get(`http://localhost:3001/order/cart/${activeOrder[0].id}`)
                     .then((resp) => {
                         let response = Object.values(resp.data)
                         dispatch(getDbCart(response))
@@ -96,7 +86,6 @@ export default function CardCarrito(props) {
                             }
                         })
                     })
-
             })
     }
 

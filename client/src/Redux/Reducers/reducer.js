@@ -68,7 +68,7 @@ export default function (state = initialState, action) {
         case 'GET_FAVORITES':
             return { ...state, favorites: action.payload }
         case 'GET_RID':
-            return {...state, rID: action.payload}
+            return { ...state, rID: action.payload }
         default:
             return state;
     }

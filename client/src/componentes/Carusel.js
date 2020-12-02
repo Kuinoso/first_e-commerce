@@ -6,31 +6,35 @@ import stIm from './images/bbf.mp4';
 import nIm from './images/nrt.mp4'
 import Axios from 'axios';
 import { useDispatch, useSelector } from "react-redux";
-import { getProducts } from "../Redux/Actions/actions"
+import { getProducts } from "../Redux/Actions/actions";
+
 export default function Carusel() {
   const history = useHistory();
   const dispatch = useDispatch();
+
   const pokemon = async (e) => {
     e.preventDefault();
-    const res = await Axios.get(`http://localhost:3001/products/categoria/pokemon`)
+    await Axios.get(`http://localhost:3001/products/categoria/pokemon`)
       .then(res => {
         history.push(`/products/categoria/pokemon`)
         const productDist = Object.values(res.data);
         dispatch(getProducts(productDist))
       })
   }
+
   const starwars = async (e) => {
     e.preventDefault();
-    const res = await Axios.get(`http://localhost:3001/products/categoria/starwars`)
+    await Axios.get(`http://localhost:3001/products/categoria/starwars`)
       .then(res => {
         history.push(`/products/categoria/starwars`)
         const productDist = Object.values(res.data);
         dispatch(getProducts(productDist))
       })
   }
+
   const naruto = async (e) => {
     e.preventDefault();
-    const res = await Axios.get(`http://localhost:3001/products/categoria/naruto`)
+    await Axios.get(`http://localhost:3001/products/categoria/naruto`)
       .then(res => {
         history.push(`/products/categoria/naruto`)
         const productDist = Object.values(res.data);
@@ -42,7 +46,7 @@ export default function Carusel() {
     <Carousel >
       <Carousel.Item interval={800}>
         <div class="view" onClick={starwars} >
-          <video muted autoPlay loop style={{width: '100vw', margin: 'auto'}} class="video-fluid" >
+          <video muted autoPlay loop style={{ width: '100vw', margin: 'auto' }} class="video-fluid" >
             <source src={stIm} type="video/mp4" />
           </video>
           <div class="mask rgba-black-strong"></div>
@@ -54,9 +58,9 @@ export default function Carusel() {
           </div>
         </div>
       </Carousel.Item>
-      <Carousel.Item interval={800} style={{width: '100vw'}}>
+      <Carousel.Item interval={800} style={{ width: '100vw' }}>
         <div class="view" onClick={pokemon}>
-          <video style={{width: '100vw', margin: 'auto'}} class="video-fluid" autoPlay loop muted>
+          <video style={{ width: '100vw', margin: 'auto' }} class="video-fluid" autoPlay loop muted>
             <source src={pIm} type="video/mp4" />
           </video>
           <div class="mask rgba-black-strong"></div>
@@ -68,9 +72,9 @@ export default function Carusel() {
           </div>
         </div>
       </Carousel.Item>
-      <Carousel.Item interval={800} style={{width: '100vw'}}>
+      <Carousel.Item interval={800} style={{ width: '100vw' }}>
         <div class="view" onClick={naruto}>
-          <video style={{width: '100vw', margin: 'auto'}} class="video-fluid" autoPlay loop muted>
+          <video style={{ width: '100vw', margin: 'auto' }} class="video-fluid" autoPlay loop muted>
             <source src={nIm} type="video/mp4" />
           </video>
           <div class="mask rgba-black-strong"></div>
@@ -85,5 +89,3 @@ export default function Carusel() {
     </Carousel>
   )
 }
-
-

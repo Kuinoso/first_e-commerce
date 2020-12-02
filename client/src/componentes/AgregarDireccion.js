@@ -1,12 +1,10 @@
 import Axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { getAdress } from '../Redux/Actions/actions';
 import Swal from 'sweetalert2';
 import SimpleNavbar from './SimpleNavbar';
-import Footer from './Footer'
-
 
 export default function AgregarDireccion() {
     const history = useHistory();
@@ -25,6 +23,7 @@ export default function AgregarDireccion() {
         e.preventDefault();
         history.push(`/checkout/${activeOrder[0].id}/${userData.id}`)
     }
+
     const handleChange = (e) => {
         setData({
             ...data,
@@ -41,7 +40,7 @@ export default function AgregarDireccion() {
             district: data.district,
             postalCode: data.postalCode
         }
-        const res = await Axios.post(`http://localhost:3001/user/newAdress/${userData.id}`, json, {
+        await Axios.post(`http://localhost:3001/user/newAdress/${userData.id}`, json, {
             headers: {
                 'Content-Type': 'application/json'
             }

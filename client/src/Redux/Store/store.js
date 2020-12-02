@@ -16,6 +16,6 @@ const store = createStore(
     applyMiddleware() // add any middlewares here
 )
 
-const  persistor = persistStore(store); // used to create the persisted store, persistor will be used in the next step
+const persistor = persistStore(store); // used to create the persisted store, persistor will be used in the next step
 
-export {store, persistor}
+export { store, persistor }

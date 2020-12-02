@@ -1,14 +1,12 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { useDispatch, useSelector } from "react-redux";
-import { getCategories, getProducts } from '../Redux/Actions/actions';
+import { useDispatch } from "react-redux";
+import { getProducts } from '../Redux/Actions/actions';
 import axios from 'axios';
-import Nav from 'react-bootstrap/Nav'
 import '../componentes/css/Admin.css'
-import { Container, Card, Row } from 'react-bootstrap'
+import { Card } from 'react-bootstrap'
 import Nat from './SuperSimpleNavbarAdmin'
 import Footer from './Footer';
-
 
 export default function Admin() {
     const dispatch = useDispatch();
@@ -18,6 +16,7 @@ export default function Admin() {
         e.preventDefault();
         history.push('/admin/addproduct')
     }
+
     const btnProducts = async (e) => {
         e.preventDefault();
         history.push('/admin/products');
@@ -49,7 +48,6 @@ export default function Admin() {
     }
 
     return (
-
         <div>
             <Nat />
             <div className='divPrincipalAdmin' style={{ margin: 'auto' }}>

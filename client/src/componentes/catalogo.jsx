@@ -1,17 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ProductCard from './productCard.jsx';
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useParams } from 'react-router-dom';
 import Nat from './navbar'
 import Footer from './Footer'
 
-
-
-
 export default function Catalogo() {
-
     const catalogo = useSelector(state => state.products)
     const categoria = useSelector(state => state.categories)
+    const parametro = useParams()
+    let name;
+    let description;
 
     function titleCase(str) {
         var splitStr = str.toLowerCase().split(' ');
@@ -21,14 +20,9 @@ export default function Catalogo() {
         return splitStr.join(' ');
     }
 
-
     function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
-
-    const parametro = useParams()
-    let name;
-    let description;
 
     categoria.forEach(element => {
         if (element.name === parametro.nombreCat) {
@@ -36,7 +30,7 @@ export default function Catalogo() {
             description = element.description
         }
         if (parametro.nombreCat === undefined) {
-            name= 'Catálogo'
+            name = 'Catálogo'
             description = "Todos los productos del universo geek!"
         }
     });
@@ -45,8 +39,8 @@ export default function Catalogo() {
         <div>
             <Nat />
             <div class='infoCat102'>
-            {name && <h1 class='titA102'>{capitalizeFirstLetter(name)}</h1>}
-            {description && <h3 class='titC102'>{capitalizeFirstLetter(description)}</h3>}
+                {name && <h1 class='titA102'>{capitalizeFirstLetter(name)}</h1>}
+                {description && <h3 class='titC102'>{capitalizeFirstLetter(description)}</h3>}
             </div>
             <div class="tarjeta" >
                 {catalogo.map((p) => <ProductCard
@@ -62,6 +56,5 @@ export default function Catalogo() {
             </div>
             <Footer />
         </div>
-
     )
 }

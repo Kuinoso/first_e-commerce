@@ -1,16 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from 'react';
+import { useSelector } from "react-redux";
 import { useHistory } from 'react-router-dom';
-import axios from 'axios'
-import { Row, Col, Button } from 'react-bootstrap';
+import { Col } from 'react-bootstrap';
 import CardCarrito from './cardCarrito'
 import Nat from './navbar'
 import Footer from './Footer';
-import { getAdress } from '../Redux/Actions/actions'
 
 export default function Cart() {
   const history = useHistory();
-  const dispatch = useDispatch();
   const userData = useSelector(state => state.userId)
   const dbCart = useSelector(state => state.dbCart)
   const activeOrder = useSelector(state => state.activeOrder)
@@ -21,21 +18,13 @@ export default function Cart() {
     count = count + element.cart.amount
   });
 
-
-  const [subtotal, setSubtotal] = useState({
-    total: 0
-  })
-
-
-
   function titleCase(str) {
     var splitStr = str.toLowerCase().split(' ');
-    for (var i = 0; i < splitStr.length; i++) {
+    for (let i = 0; i < splitStr.length; i++) {
       splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
     }
     return splitStr.join(' ');
   }
-
 
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -66,12 +55,10 @@ export default function Cart() {
             cart={p.cart}
           />)}
         </div>
-
         <div class='rigthD'>
           <div style={{ margin: '2vh' }}>
             <h3>{count} productos</h3>
             <h1 style={{ color: '#D90429' }}>Subtotal: ${suma}</h1>
-
           </div>
           <Col sm={6}>
             {dbCart.length === 0 ? <span></span> :

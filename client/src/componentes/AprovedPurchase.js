@@ -1,8 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import SimpleNavbar from './SimpleNavbar'
-import { useDispatch, useSelector } from "react-redux";
-import Swal from 'sweetalert2';
-import { useHistory } from 'react-router-dom';
+import React from 'react';
+import { useSelector } from "react-redux";
 import Nat from './navbar'
 
 export default function AprovedPurchase() {
@@ -23,10 +20,10 @@ export default function AprovedPurchase() {
             <Nat />
             <div class='container99'>
                 <div class='cont99'>
-                <h1 class='TT99'>Muchas gracias por tu compra!</h1>
-                <h4>Una copia de tu recibo te llegará al mail {pData.user.email}, tambien puedes ver y gestionar la compra en tu perfil.</h4>
+                    <h1 class='TT99'>Muchas gracias por tu compra!</h1>
+                    <h4>Una copia de tu recibo te llegará al mail {pData.user.email}, tambien puedes ver y gestionar la compra en tu perfil.</h4>
                 </div>
-                <div class='card99' style={{backgroundColor: 'white'}}>
+                <div class='card99' style={{ backgroundColor: 'white' }}>
                     <div class='top99'>
                         <h3 class='titu99'>Orden #{pData.order}</h3>
                         <h5>{utc}</h5>
