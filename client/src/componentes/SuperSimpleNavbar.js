@@ -1,9 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route, useHistory } from 'react-router-dom'
-import { useDispatch, useSelector } from "react-redux";
-import { getUserInfo, getActiveOrder} from '../Redux/Actions/actions';
-import axios from 'axios'
-
+import React from 'react';
+import { useHistory } from 'react-router-dom'
 
 export default function SuperSimpleNavbar() {
     let history = useHistory();

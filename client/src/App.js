@@ -38,7 +38,7 @@ import PutReview from './componentes/modificarReview'
 
 
 function App() {
-  const user = useSelector(state => state.userId.role)
+  const user = useSelector(state => state.userId && state.userId.role)
   const login = useSelector(state => state.loggedIn)
 
   const protection = (component) => {

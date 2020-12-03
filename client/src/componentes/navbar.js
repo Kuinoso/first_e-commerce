@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from "react-redux";
-import { BrowserRouter as Router, Route, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { getFavorites, getCategories, getToken, getProducts, getDbCart, logOut, getUserInfo, getActiveOrder, resetCart } from '../Redux/Actions/actions'
 import image from './images/carrito.png';
@@ -9,10 +9,8 @@ import Swal from 'sweetalert2';
 import fHeart from './images/cl.png';
 import eC from './images/empC.png'
 
-
 export default function Navbar() {
     const categoria = useSelector(state => state.categories);
-    const dbCart = useSelector(state => state.dbCart);
     const cart = useSelector(state => state.cart);
     const [busq, setBusq] = useState([]);
     const activeOrder = useSelector(state => state.activeOrder);
@@ -22,7 +20,6 @@ export default function Navbar() {
     let history = useHistory();
     const dispatch = useDispatch();
     const [dc, setDc] = useState([])
-    const [c, setC] = useState([])
 
     useEffect(() => {
         async function makeRequests() {
@@ -38,14 +35,12 @@ export default function Navbar() {
         makeRequests();
     }, []);
 
-
     const handleChange = async (event) => {
         history.push(`/products/categoria/${event.target.value}`)
-        const res = await axios.get(`http://localhost:3001/products/categoria/${event.target.value}`)
+        await axios.get(`http://localhost:3001/products/categoria/${event.target.value}`)
             .then(res => {
                 const resObj = Object.values(res.data)
                 dispatch(getProducts(resObj))
-
             })
     }
 
@@ -65,7 +60,6 @@ export default function Navbar() {
                     dispatch(getProducts(ObjRes))
                 }
             })
-
     }
 
     const handleP = async (e) => {
@@ -76,7 +70,6 @@ export default function Navbar() {
 
                 dispatch(getProducts(res.data))
             })
-
     }
 
     const handleEnter = (e) => {
@@ -91,12 +84,6 @@ export default function Navbar() {
                     dispatch(getProducts(ObjRes))
                 }
             })
-
-    }
-
-    const handleAdmin = (e) => {
-        e.preventDefault();
-        history.push('/admin')
     }
 
     const handleHome = (e) => {
@@ -132,19 +119,18 @@ export default function Navbar() {
             history.push(`/guest/carrito`)
         } else if (loggedIn === true) {
             console.log(activeOrder[0].id)
-            const rous = await axios.get(`http://localhost:3001/order/cart/${activeOrder[0].id}`)
+            await axios.get(`http://localhost:3001/order/cart/${activeOrder[0].id}`)
                 .then(resp => {
                     let products = Object.values(resp.data)
                     dispatch(getDbCart(products))
                     history.push(`/user/${userData.id}/carrito`)
                 })
         }
-
-
     }
+
     const goDashboard = async (e) => {
         e.preventDefault();
-        const res = await axios.get(`http://localhost:3001/user/orders/getOrders`, {
+        await axios.get(`http://localhost:3001/user/orders/getOrders`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -174,14 +160,13 @@ export default function Navbar() {
           rgba(0,0,123,0.4)
           url("https://sweetalert2.github.io/images/nyan-cat.gif")
           left top
-          no-repeat
-        `
+          no-repeat`
         })
     }
 
     const favs = async (e) => {
         e.preventDefault();
-        const rusp = await axios.get(`http://localhost:3001/products/favorites/${userData.id}`)
+        await axios.get(`http://localhost:3001/products/favorites/${userData.id}`)
             .then(resp => {
                 let favs = Object.values(resp.data)
                 dispatch(getFavorites(favs))
@@ -198,16 +183,12 @@ export default function Navbar() {
     }
 
     return (
-
         <nav class="navbar navbar-expand-lg navbar-light bg-light" style={{ display: "flex", alignItems: "stretch" }}>
             <a onClick={handleHome} class="navbar-brand">
                 <img src="https://i.imgur.com/QUOAdAS.png" width="190vh" height="80vh" alt="" style={{ cursor: 'pointer' }} />
             </a>
             <div class="collapse navbar-collapse" id="navbarSupportedContent"  >
                 <ul class="navbar-nav mr-auto">
-                    {/*  <li class="nav-item">
-                        <a class="nav-link my-1 mr-sm-2 homE" href="Dashboard Admin" onClick={handleAdmin}>Dashboard Admin</a>
-                    </li> */}
                     <li class="nav-item">
                         <button class="nav-link" style={{ color: '#D90429', marginLeft: '2vw' }} href="Productos" onClick={handleP}>Productos</button>
                     </li>
@@ -217,7 +198,6 @@ export default function Navbar() {
                             <option class='opt102' selected="true" disabled="disabled">Categorias</option>
                             {categoria.map(cat => <option class='opt102' value={cat.name} key={cat.id}>{titleCase(cat.name)}</option>)}
                         </select>
-
                     </li>
                     <li >
                         <form onSubmit={handleEnter}>
@@ -234,10 +214,10 @@ export default function Navbar() {
                 <div style={{ display: "flex" }}>
                     {loggedIn === true && userData.role === 'Admin' &&
                         <div style={{ cursor: 'pointer', display: "flex", justifyContent: "flex-end", marginRight: '1.5vw' }}>
-                          <button className="nav-link" onClick={() => history.push('/admin')}>administracion</button>
+                            <button className="nav-link" onClick={() => history.push('/admin')}>administracion</button>
                         </div>
                     }
-                     {loggedIn === true && dc.length === 0 &&
+                    {loggedIn === true && dc.length === 0 &&
                         <div onClick={carrito} style={{ cursor: 'pointer', display: "flex", justifyContent: "flex-end", marginRight: '1.5vw' }}>
                             <img src={image} style={{ width: "40px", height: "4vh" }} role="button" />
                         </div>
@@ -271,4 +251,3 @@ export default function Navbar() {
         </nav>
     )
 }
-

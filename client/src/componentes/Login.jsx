@@ -10,6 +10,7 @@ import { GoogleLogin } from 'react-google-login';
 export default function Login() {
     const cart = useSelector(state => state.cart)
     const dispatch = useDispatch();
+    const history = useHistory();
     const [data, setData] = useState({
         email: "",
         password: "",
@@ -21,21 +22,20 @@ export default function Login() {
             tokenId: response.tokenId,
             withCredentials: data.withCredentials
         }
-        const res = await axios.post('http://localhost:3001/user/login/google', json, {
+        await axios.post('http://localhost:3001/user/login/google', json, {
             headers: {
                 'Content-Type': 'application/json'
             }
         }).then(async (resp) => {
 
             dispatch(getToken(resp.data.accessToken))
-            const res = await axios.get(`http://localhost:3001/user/orders/getOrders`, {
+            await axios.get(`http://localhost:3001/user/orders/getOrders`, {
                 headers: {
                     'Authorization': `Bearer ${resp.data.accessToken}`
                 }
             }).then(async (respo) => {
-
                 if (respo.data.orders.length === 0) {
-                    const ras = await axios.post(`http://localhost:3001/order/${respo.data.id}`)
+                    await axios.post(`http://localhost:3001/order/${respo.data.id}`)
                         .then(async (respi) => {
                             console.log(respi.data)
                             let activeOrder = respi.data.orders.filter(ord => ord.state === "carrito")
@@ -50,13 +50,13 @@ export default function Login() {
                                         price: item.price,
                                         amount: 1
                                     }
-                                    const res = await axios.post(`http://localhost:3001/user/${respi.data.id}/cart`, json, {
+                                    await axios.post(`http://localhost:3001/user/${respi.data.id}/cart`, json, {
                                         headers: {
                                             'Content-Type': 'application/json'
                                         }
                                     })
                                 })
-                                const rous = await axios.get(`http://localhost:3001/order/cart/${activeOrder[0].id}`)
+                                await axios.get(`http://localhost:3001/order/cart/${activeOrder[0].id}`)
                                     .then(respe => {
                                         let products = Object.values(respe.data)
                                         dispatch(getDbCart(products))
@@ -92,13 +92,11 @@ export default function Login() {
                             }
                         })
                 } else if (respo.data.orders.length > 0) {
-                    console.log(respo.data)
                     let activeOrder = respo.data.orders.filter(ord => ord.state === "carrito")
                     dispatch(logIn())
                     dispatch(getUserInfo(respo.data));
                     dispatch(getActiveOrder(activeOrder));
-
-                    const rusp = await axios.get(`http://localhost:3001/products/favorites/${respo.data.id}`)
+                    await axios.get(`http://localhost:3001/products/favorites/${respo.data.id}`)
                         .then(async (repi) => {
                             let favs = Object.values(repi.data)
                             dispatch(getFavorites(favs))
@@ -110,13 +108,13 @@ export default function Login() {
                                         price: item.price,
                                         amount: 1
                                     }
-                                    const res = await axios.post(`http://localhost:3001/user/${respo.data.id}/cart`, json, {
+                                    await axios.post(`http://localhost:3001/user/${respo.data.id}/cart`, json, {
                                         headers: {
                                             'Content-Type': 'application/json'
                                         }
                                     })
                                 })
-                                const rous = await axios.get(`http://localhost:3001/order/cart/${activeOrder[0].id}`)
+                                await axios.get(`http://localhost:3001/order/cart/${activeOrder[0].id}`)
                                     .then(resp => {
                                         let products = Object.values(resp.data)
                                         dispatch(getDbCart(products))
@@ -129,11 +127,8 @@ export default function Login() {
                         })
                 }
             })
-
         })
     }
-
-    const history = useHistory();
 
     const inputChange = (e) => {
         setData({
@@ -153,7 +148,7 @@ export default function Login() {
             email: data.email,
             password: data.password
         }
-        const res = await axios.post(`http://localhost:3001/user/login`, json, {
+        await axios.post(`http://localhost:3001/user/login`, json, {
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -168,12 +163,11 @@ export default function Login() {
                 })
             }
             dispatch(getToken(resp.data.accessToken))
-            const res = await axios.get(`http://localhost:3001/user/orders/getOrders`, {
+            await axios.get(`http://localhost:3001/user/orders/getOrders`, {
                 headers: {
                     'Authorization': `Bearer ${resp.data.accessToken}`
                 }
             }).then(async (respo) => {
-                console.log(respo.data)
                 if (respo.data.state !== 'alta') {
                     Swal.fire({
                         position: 'top',
@@ -199,7 +193,7 @@ export default function Login() {
                           no-repeat
                         `
                     })
-                    const rusp = await axios.get(`http://localhost:3001/products/favorites/${respo.data.id}`)
+                    await axios.get(`http://localhost:3001/products/favorites/${respo.data.id}`)
                         .then(async (repi) => {
                             let favs = Object.values(repi.data)
                             dispatch(getFavorites(favs))
@@ -211,13 +205,13 @@ export default function Login() {
                                         price: item.price,
                                         amount: 1
                                     }
-                                    const res = await axios.post(`http://localhost:3001/user/${respo.data.id}/cart`, json, {
+                                    await axios.post(`http://localhost:3001/user/${respo.data.id}/cart`, json, {
                                         headers: {
                                             'Content-Type': 'application/json'
                                         }
                                     })
                                 })
-                                const rous = await axios.get(`http://localhost:3001/order/cart/${activeOrder[0].id}`)
+                                await axios.get(`http://localhost:3001/order/cart/${activeOrder[0].id}`)
                                     .then(resp => {
                                         let products = Object.values(resp.data)
                                         dispatch(getDbCart(products))
@@ -225,24 +219,17 @@ export default function Login() {
                                         history.push(`/user/${respo.data.id}/order`)
                                     })
                             } else {
-                                const rous = await axios.get(`http://localhost:3001/order/cart/${activeOrder[0].id}`)
-                                .then(resp => {
-                                    let products = Object.values(resp.data)
-                                    dispatch(getDbCart(products))
-                                    history.push(`/user/${respo.data.id}/order`)
-                                })
+                                await axios.get(`http://localhost:3001/order/cart/${activeOrder[0].id}`)
+                                    .then(resp => {
+                                        let products = Object.values(resp.data)
+                                        dispatch(getDbCart(products))
+                                        history.push(`/user/${respo.data.id}/order`)
+                                    })
                             }
                         })
                 }
             })
         })
-    }
-    const responseErrorGoogle = (response) => {
-    }
-
-    const handleHome = (e) => {
-        e.preventDefault();
-        history.push('/')
     }
 
     return (
@@ -261,18 +248,16 @@ export default function Login() {
                         <label for="exampleInputPassword1">Contraseña</label>
                         <input type="password" name="password" onChange={inputChange} class="form-control" id="exampleInputPassword1" style={{ width: "350px" }} placeholder="Ingresa tu contraseña..." />
                     </div>
-                    <div class='btns104' style={{display:'flex', flexWrap:'wrap'}}>
-                        <button class='DO101' style={{ width: '10vw', marginBottom: '3vh'}} type="submit" onClick={handleLogIn}>Iniciar sesion</button>
-                        
+                    <div class='btns104' style={{ display: 'flex', flexWrap: 'wrap' }}>
+                        <button class='DO101' style={{ width: '10vw', marginBottom: '3vh' }} type="submit" onClick={handleLogIn}>Iniciar sesion</button>
                         <GoogleLogin
                             clientId="689080969961-k4i4ccctckdvf369ln044ar325rfd1km.apps.googleusercontent.com"
                             buttonText="Iniciar Sesion"
                             onSuccess={responseSuccessGoogle}
                             isSignedIn={false}
-                            onFailure={responseErrorGoogle}
                             cookiePolicy={'single_host_origin'}
                         />
-                         <br />
+                        <br />
                         <p style={{ marginTop: '2vh', margin: '0', textAlign: 'center' }}>¿No estás registrado?</p>
                         <button class='DO101' style={{ width: '10vw', margin: '0' }} onClick={registrar}> Crear cuenta</button>
                     </div>

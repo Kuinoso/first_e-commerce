@@ -6,7 +6,6 @@ import { getAdress } from '../Redux/Actions/actions';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import SimpleNavbar from './SimpleNavbar';
-import Footer from './Footer'
 
 export default function EditarDireccion() {
     const history = useHistory();
@@ -35,7 +34,6 @@ export default function EditarDireccion() {
                         district: res.data.district,
                         postalCode: res.data.postalCode
                     })
-
                 })
         }
         makeRequests();
@@ -50,12 +48,12 @@ export default function EditarDireccion() {
             district: data.district,
             postalCode: data.postalCode
         }
-        const res = await Axios.put(`http://localhost:3001/user/editAdress/${userData.id}/${adressId}`, json, {
+        await Axios.put(`http://localhost:3001/user/editAdress/${userData.id}/${adressId}`, json, {
             headers: {
                 'Content-Type': 'application/json'
             }
-        }).then(async (resp) => {
-            const ris = await axios.get(`http://localhost:3001/user/adress/${userData.id}`)
+        }).then(async () => {
+            await axios.get(`http://localhost:3001/user/adress/${userData.id}`)
                 .then(resp => {
                     dispatch(getAdress(resp.data.adresses))
                     Swal.fire({

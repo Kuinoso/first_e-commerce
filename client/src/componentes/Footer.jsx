@@ -7,35 +7,32 @@ import Axios from 'axios';
 import { getProducts, getUserInfo, getActiveOrder } from "../Redux/Actions/actions";
 import { useDispatch, useSelector } from "react-redux";
 
-
-
 export default function Footer() {
     const history = useHistory()
     const dispatch = useDispatch();
     const token = useSelector(state => state.token);
     const userData = useSelector(state => state.userId);
 
-
-
-
     const starwars = async (e) => {
         e.preventDefault();
-        const res = await Axios.get(`http://localhost:3001/products/categoria/starwars`)
+        await Axios.get(`http://localhost:3001/products/categoria/starwars`)
             .then(res => {
                 history.push(`/products/categoria/starwars`)
                 const productDist = Object.values(res.data);
                 dispatch(getProducts(productDist))
             })
     }
+
     const pokemon = async (e) => {
         e.preventDefault();
-        const res = await Axios.get(`http://localhost:3001/products/categoria/pokemon`)
+        await Axios.get(`http://localhost:3001/products/categoria/pokemon`)
             .then(res => {
                 history.push(`/products/categoria/pokemon`)
                 const productDist = Object.values(res.data);
                 dispatch(getProducts(productDist))
             })
     }
+
     const naruto = async (e) => {
         e.preventDefault();
         const res = await Axios.get(`http://localhost:3001/products/categoria/naruto`)
@@ -46,14 +43,14 @@ export default function Footer() {
             })
     }
 
-
     const handleHome = (e) => {
         e.preventDefault();
         history.push('/')
     }
+
     const goDashboard = async (e) => {
         e.preventDefault();
-        const res = await Axios.get(`http://localhost:3001/user/orders/getOrders`, {
+        await Axios.get(`http://localhost:3001/user/orders/getOrders`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -67,16 +64,11 @@ export default function Footer() {
 
     return (
         <div className="footer">
-
             <div className="footer_div_container">
                 <div className="company">
                     <a onClick={handleHome} class="navbar-brand">
                         <img src="https://i.imgur.com/QUOAdAS.png" width="200vh" height="100vh" alt="" style={{ marginRight: '10vw', marginBottom: '5vw', cursor: 'pointer' }} />
                     </a>
-                    {/* <h5>El mundo GEEK a solo un click!</h5> */}
-                    {/*  <p> Nos esforzamos por tener un impacto positivo en los clientes, empleados, pequeñas empresas, la economía y las comunidades.
-                    La comunidad geek son constructores inteligentes y apasionados con diferentes orígenes y objetivos, que comparten el deseo
-                        común de estar siempre aprendiendo e inventando en nombre de nuestros clientes.</p> */}
                 </div>
                 <div className="products">
                     <ul >
@@ -108,7 +100,6 @@ export default function Footer() {
                     </ul>
                 </div>
                 <div className="contact">
-
                     <ul>
                         <li className="lista">
                             <h3 style={{ color: '#D90429', marginBottom: '25px' }} className="titulo_contact"> Contacto </h3>

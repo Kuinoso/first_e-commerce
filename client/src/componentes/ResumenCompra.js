@@ -1,14 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { Button } from 'react-bootstrap';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { getA, getAdress, getActiveOrder, getPurchaseData } from '../Redux/Actions/actions';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import SimpleNavbar from './SimpleNavbar'
-import Footer from './Footer'
-
-
 
 export default function ResumenCompra() {
     const history = useHistory()
@@ -16,7 +12,6 @@ export default function ResumenCompra() {
     const dbCart = useSelector(state => state.dbCart);
     const userData = useSelector(state => state.userId)
     const activeOrder = useSelector(state => state.activeOrder)
-    const adresses = useSelector(state => state.adresses)
     const [data, setData] = useState({
         options: false,
         domicilio: false,
@@ -40,6 +35,7 @@ export default function ResumenCompra() {
     dbCart.forEach(element => {
         suma = suma + (element.cart.price * element.cart.amount)
     });
+
     const handleChange = (e) => {
         setData({
             ...data,
@@ -49,7 +45,7 @@ export default function ResumenCompra() {
 
     const hideOptionsA = async (e) => {
         e.preventDefault();
-        const res = await axios.get(`http://localhost:3001/user/adress/${userData.id}`)
+        await axios.get(`http://localhost:3001/user/adress/${userData.id}`)
             .then(resp => {
                 let filtered = resp.data.adresses.filter(item => item.state !== "Baja")
                 dispatch(getAdress(filtered))
@@ -63,7 +59,6 @@ export default function ResumenCompra() {
                     forward: false
                 })
             })
-
     }
 
     const hideOptionsB = (e) => {
@@ -102,7 +97,7 @@ export default function ResumenCompra() {
             confirmButtonText: 'Eliminar'
         }).then(async (alert) => {
             if (alert.isConfirmed === true) {
-                const res = await axios.put(`http://localhost:3001/user/${idA}/adress/baja`)
+                await axios.put(`http://localhost:3001/user/${idA}/adress/baja`)
                     .then(resp => {
                         setData({
                             ...data,
@@ -138,9 +133,8 @@ export default function ResumenCompra() {
                 })
             }
         })
-
-
     }
+
     const resetOptions = (e) => {
         e.preventDefault();
         setData({
@@ -192,12 +186,12 @@ export default function ResumenCompra() {
                     adressId: data.selectedAdress.id
                 }
             }
-            const res = await axios.put(`http://localhost:3001/order/${activeOrder[0].id}/payment`, json, {
+            await axios.put(`http://localhost:3001/order/${activeOrder[0].id}/payment`, json, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             }).then(async () => {
-                const ras = await axios.post(`http://localhost:3001/order/${userData.id}`)
+                await axios.post(`http://localhost:3001/order/${userData.id}`)
                     .then(async (resp) => {
                         let activeOrder = resp.data.orders.filter(ord => ord.state === "carrito")
                         dispatch(getActiveOrder(activeOrder))
@@ -217,7 +211,6 @@ export default function ResumenCompra() {
                             showConfirmButton: false,
                             timer: 1500
                         })
-                        
                         let json = {
                             email: userData.email,
                             products: dbCart,
@@ -226,22 +219,17 @@ export default function ResumenCompra() {
                             user: userData,
                             order: nOrden,
                             total: suma
-
                         }
-
-                        
                         history.push(`/aproved/${activeOrder[0].id}/${userData.id}`)
-                        const res = await axios.post('http://localhost:3001/user/send-mail',json,{
-                            headers:{
+                        await axios.post('http://localhost:3001/user/send-mail', json, {
+                            headers: {
                                 'content-type': 'application/json'
                             }
                         })
                     })
             })
         }
-
     }
-
 
     return (
         <div id="prueba">
@@ -249,7 +237,6 @@ export default function ResumenCompra() {
             {data.payment === false &&
                 <div class='containerRC'>
                     <div class='leftD'>
-
                         {data.options === false &&
                             <div class='RC1'>
                                 <h2 class='titleRC'>Selecciona como deseas recibir tu compra!</h2>
@@ -274,15 +261,15 @@ export default function ResumenCompra() {
                                                 <h4>{item.firstLine}</h4>
                                                 <p>{item.secondLine} - {item.postalCode}</p>
                                                 <p>{item.district} - {item.province}</p>
-                                                <button  class='DO101' style={{ margin: '1vh' }} value={item.id} onClick={editA}>Editar</button>
+                                                <button class='DO101' style={{ margin: '1vh' }} value={item.id} onClick={editA}>Editar</button>
                                                 <button style={{ margin: '1vh' }} class='DO101' value={item.id} onClick={deleteA}>Eliminar</button>
                                             </div>
                                             <button style={{ margin: '1vh' }} class='DO101' value={item.id} onClick={selectA}>Seleccionar Dirección</button>
                                         </div>
                                     )
                                 }
-                                <button  class='DO101' style={{ margin: '1vh', width: '250px' }} onClick={addA}>Agregar nueva dirección</button>
-                                <button  class='DO101' style={{ margin: '1vh', width: '300px' }} onClick={resetOptions}>Elegir otro método de entrega</button>
+                                <button class='DO101' style={{ margin: '1vh', width: '250px' }} onClick={addA}>Agregar nueva dirección</button>
+                                <button class='DO101' style={{ margin: '1vh', width: '300px' }} onClick={resetOptions}>Elegir otro método de entrega</button>
                             </div>
                         }
                         {data.sA === true &&
@@ -293,7 +280,7 @@ export default function ResumenCompra() {
                                         <h4>{data.selectedAdress.firstLine}</h4>
                                         <p>{data.selectedAdress.secondLine} - {data.selectedAdress.postalCode}</p>
                                         <p>{data.selectedAdress.district} - {data.selectedAdress.province}</p>
-                                        <button  class='DO101' style={{ margin: '1vh', width: '250px' }} onClick={hideOptionsA}>Elegir otra dirección</button>
+                                        <button class='DO101' style={{ margin: '1vh', width: '250px' }} onClick={hideOptionsA}>Elegir otra dirección</button>
                                         <button class='DO101' style={{ margin: '1vh', width: '300px' }} onClick={resetOptions}>Elegir otro metodo de entrega</button>
                                     </div>
                                 </div>

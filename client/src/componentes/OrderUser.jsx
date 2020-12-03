@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Nav, Table, Row } from 'react-bootstrap'
 import { useDispatch, useSelector } from "react-redux";
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
@@ -16,12 +15,13 @@ export default function OrderUser() {
     });
     const dispatch = useDispatch();
     let history = useHistory();
-    const activeOrder = useSelector(state => state.activeOrder)
     const userData = useSelector(state => state.userId);
+
     useEffect(() => {
-       setData({...data,
-    orders: userData.orders
-    })
+        setData({
+            ...data,
+            orders: userData.orders
+        })
     }, []);
 
     const getOrderData = async (e) => {
@@ -29,13 +29,11 @@ export default function OrderUser() {
         console.log(e.target)
         var orderId = e.target.value
         console.log(orderId)
-        const rous = await axios.get(`http://localhost:3001/order/${orderId}`)
+        await axios.get(`http://localhost:3001/order/${orderId}`)
             .then(async (resp) => {
-                console.log('2')
                 dispatch(getPurchaseData(resp.data));
                 const rid = await axios.get(`http://localhost:3001/order/cart/${orderId}`)
                     .then(async (repo) => {
-                        console.log('3')
                         let products = Object.values(repo.data)
                         dispatch(getOrderProducts(products))
                         if (resp.data.deliveryMethod === 'sucursal') {
@@ -62,6 +60,7 @@ export default function OrderUser() {
             canceladas: true
         })
     }
+
     const handlePP = (e) => {
         e.preventDefault();
         setData({
@@ -72,9 +71,9 @@ export default function OrderUser() {
             canceladas: false
         })
     }
+
     const handleDD = (e) => {
         e.preventDefault();
-
         setData({
             ...data,
             all: true,
@@ -83,9 +82,9 @@ export default function OrderUser() {
             canceladas: false
         })
     }
+
     const handleAA = (e) => {
         e.preventDefault();
-
         setData({
             ...data,
             all: false,

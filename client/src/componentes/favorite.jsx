@@ -6,27 +6,25 @@ import Nat from './navbar'
 import Footer from './Footer';
 import axios from 'axios'
 
-
 export default function Favoritos() {
     const [data, setData] = useState([])
     const dispatch = useDispatch()
     const userData = useSelector(state => state.userId)
+
     useEffect(() => {
         async function makeRequests() {
-
             await axios.get(`http://localhost:3001/products/favorites/${userData.id}`)
-            .then(resp => {
-                let faves = Object.values(resp.data)
-                dispatch(getFavorites(faves))
-                setData(faves)
-            })
+                .then(resp => {
+                    let faves = Object.values(resp.data)
+                    dispatch(getFavorites(faves))
+                    setData(faves)
+                })
         }
         makeRequests();
     }, []);
 
     const reload = () => {
         window.location.reload()
-
     }
 
     function titleCase(str) {
@@ -37,11 +35,9 @@ export default function Favoritos() {
         return splitStr.join(' ');
     }
 
-
     function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
-
 
     return (
         <div>
@@ -59,12 +55,11 @@ export default function Favoritos() {
                     picture={p.picture}
                     price={p.price}
                     stock={p.stock}
-                    reload = {reload}
+                    reload={reload}
                 />
                 )}
             </div>
             <Footer />
         </div>
-
     )
 }

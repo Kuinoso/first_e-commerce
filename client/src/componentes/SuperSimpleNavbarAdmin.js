@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route, useHistory } from 'react-router-dom'
-import { useDispatch, useSelector } from "react-redux";
-import { getUserInfo, getActiveOrder} from '../Redux/Actions/actions';
-import axios from 'axios'
+import React from 'react';
+import { useHistory } from 'react-router-dom'
+
 
 
 export default function SuperSimpleNavbarAd() {
@@ -12,6 +10,7 @@ export default function SuperSimpleNavbarAd() {
         e.preventDefault();
         history.push('/admin')
     }
+
     const handleHome = (e) => {
         e.preventDefault();
         history.push('/')

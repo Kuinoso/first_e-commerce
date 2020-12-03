@@ -8,8 +8,6 @@ import SuperSimpleNavbarAd from './SuperSimpleNavbarAdmin'
 export default function TablaOrden() {
   const dispatch = useDispatch();
   let history = useHistory();
-  const activeOrder = useSelector(state => state.activeOrder)
-
   const [data, setData] = useState({
     orders: [],
     all: false,
@@ -34,21 +32,18 @@ export default function TablaOrden() {
 
   const getOrderData = async (e) => {
     e.preventDefault();
-    console.log(e.target.value)
     var orderId = e.target.value
-    const rous = await axios.get(`http://localhost:3001/order/${orderId}`)
+    await axios.get(`http://localhost:3001/order/${orderId}`)
       .then(async (resp) => {
-        console.log('2')
         dispatch(getPurchaseData(resp.data));
-        const rid = await axios.get(`http://localhost:3001/order/cart/${orderId}`)
+        await axios.get(`http://localhost:3001/order/cart/${orderId}`)
           .then(async (repo) => {
-            console.log('3')
             let products = Object.values(repo.data)
             dispatch(getOrderProducts(products))
             if (resp.data.deliveryMethod === 'sucursal') {
               history.push(`/admin/selectedOrder/${orderId}`)
             } else if (resp.data.deliveryMethod === 'adress') {
-              const reis = await axios.get(`http://localhost:3001/user/adress/edit/${resp.data.adressId}`)
+              await axios.get(`http://localhost:3001/user/adress/edit/${resp.data.adressId}`)
                 .then(dat => {
                   console.log('4')
                   dispatch(getA(dat.data));
@@ -69,6 +64,7 @@ export default function TablaOrden() {
       canceladas: true
     })
   }
+
   const handlePP = (e) => {
     e.preventDefault();
     setData({
@@ -79,6 +75,7 @@ export default function TablaOrden() {
       canceladas: false
     })
   }
+
   const handleDD = (e) => {
     e.preventDefault();
 
@@ -90,6 +87,7 @@ export default function TablaOrden() {
       canceladas: false
     })
   }
+
   const handleAA = (e) => {
     e.preventDefault();
 
@@ -102,11 +100,9 @@ export default function TablaOrden() {
     })
   }
 
-
   return (
-
     <div>
-       <SuperSimpleNavbarAd />
+      <SuperSimpleNavbarAd />
       <div class='container100'>
         <div class='le100'>
           <h1 class='h1100'>Tabla De Ordenes</h1>
@@ -168,7 +164,5 @@ export default function TablaOrden() {
         </div>
       </div>
     </div>
-
   )
-
 }

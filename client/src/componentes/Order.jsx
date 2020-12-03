@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { Accordion, Card, Button, Row, Col } from 'react-bootstrap'
+import React, { useState } from 'react';
+import { Card, Button } from 'react-bootstrap'
 import axios from 'axios';
-import { BrowserRouter as Router, Route, useHistory, useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import Nat from './navbar'
 import Footer from './Footer';
 import Swal from 'sweetalert2';
 import { useDispatch, useSelector } from "react-redux";
-import pokemon from './images/lugia-pokemon-2.webp';
 import empUser from './images/empUs.png';
-import {getUserInfo} from '../Redux/Actions/actions'
-
+import { getUserInfo } from '../Redux/Actions/actions'
 
 export default function Order() {
     const userData = useSelector(state => state.userId);
@@ -45,18 +43,15 @@ export default function Order() {
             history.push(`/user/${params.id}/order/${userData.name}/segurity`)
 
         }
-        /*   if(e.target.value === 'privacidad'){
-             history.push(`/user/${params.id}/privacity`)
-         } */
-
-
     }
+
     const handleChangeI = (e) => {
         setData({
             ...data,
             [e.target.name]: e.target.value
         })
     }
+
     const handleEdit = (e) => {
         e.preventDefault();
         setData({
@@ -77,6 +72,7 @@ export default function Order() {
             lastname: data.lastname
         });
     }
+
     const handleEdited = async (e) => {
         e.preventDefault();
         let dataP;
@@ -89,8 +85,7 @@ export default function Order() {
             dataP.append('images', images);
             dataP.append('json', json);
         }
-
-        const res = await axios.put(`http://localhost:3001/user/info/${userData.id}`, dataP, {
+        await axios.put(`http://localhost:3001/user/info/${userData.id}`, dataP, {
             headers: {
                 'accept': 'application/json',
                 'Content-Type': `multipart/form-data;`,
@@ -114,11 +109,8 @@ export default function Order() {
                     edit: false
                 })
             })
-
         })
-        
     }
-
 
     return (
         <div>
@@ -130,7 +122,7 @@ export default function Order() {
                         {console.log(userData.picture)}
                         {userData.picture.length < 2 ? <img src={empUser} class='pic109' /> : <img src={`http://localhost:3001/uploads/${userData.picture}`} class='pic109' />}
                         <h2 class='titu109'>{userData.name} {userData.lastname}</h2>
-                        {userData.role === 'Admin' && <h3 style={{textAlign: "center"}}>Administrador</h3>}
+                        {userData.role === 'Admin' && <h3 style={{ textAlign: "center" }}>Administrador</h3>}
                         <button class='btn109' onClick={handleEdit}>Editar</button>
                     </div>
                 }
@@ -150,7 +142,6 @@ export default function Order() {
                         </form>
                     </div>
                 }
-
                 <div class='opCard109' >
 
                     <div>
@@ -165,18 +156,6 @@ export default function Order() {
                             </Card.Body>
                         </Card>
                     </div>
-                    {/*                     <div style={{ marginLeft: '50px' }}>
-                        <Card style={{ width: '15rem' }}>
-                            <Card.Img variant="top" src="https://i.imgur.com/du1UGbF.jpg" />
-                            <Card.Body>
-                                <Card.Title style={{color:'red', textAlign:'center', margin:'1rem', padding:'1rem'}}>Privacidad</Card.Title>
-                                <Card.Text style={{textAlign:'center', margin:'1rem', padding:'1rem'}}>
-                                    Detalles de mi información personal.
-    </Card.Text>
-                                <Button style={{marginLeft: '60px'}} onClick= {handleClick} value="privacidad" variant="danger">Ver más</Button>
-                            </Card.Body>
-                        </Card>
-                    </div> */}
                     <div style={{ marginLeft: '50px' }}>
                         <Card style={{ width: '15rem' }}>
                             <Card.Img variant="top" src="https://i.imgur.com/du1UGbF.jpg" />

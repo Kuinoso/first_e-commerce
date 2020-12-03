@@ -19,135 +19,122 @@ export default function Registro() {
         email: "",
         password: "",
         check: false,
-        withCredentials:true
+        withCredentials: true
     })
-
 
     const responseSuccessGoogle = async (response) => {
         let json = {
             tokenId: response.tokenId,
             withCredentials: data.withCredentials
         }
-        const res = await axios.post('http://localhost:3001/user/login/google', json, {
+        await axios.post('http://localhost:3001/user/login/google', json, {
             headers: {
                 'Content-Type': 'application/json'
             }
-    }).then(async (resp) => {
-    
-        dispatch(getToken(resp.data.accessToken))
-        const res = await axios.get(`http://localhost:3001/user/orders/getOrders`, {
-            headers: {
-                'Authorization': `Bearer ${resp.data.accessToken}`
-            }
-        }).then(async (respo) => {
-                
-                if(respo.data.orders.length === 0){
-                    const ras = await axios.post(`http://localhost:3001/order/${respo.data.id}`)
-                    .then(async (respi) => {
-                        console.log(respi.data)
-                        let activeOrder = respi.data.orders.filter(ord => ord.state === "carrito")
-                        dispatch(logIn())
-                        dispatch(getUserInfo(respi.data));
-                        dispatch(getActiveOrder(activeOrder))
-                        if (cart.length > 0) {
-                            cart.map(async (item) => {
-                                let json = {
-                                    idOrder: activeOrder[0].id,
-                                    idProduct: item.id,
-                                    price: item.price,
-                                    amount: 1
-                                }
-                                const res = await axios.post(`http://localhost:3001/user/${respi.data.id}/cart`, json, {
-                                    headers: {
-                                        'Content-Type': 'application/json'
+        }).then(async (resp) => {
+            dispatch(getToken(resp.data.accessToken))
+            await axios.get(`http://localhost:3001/user/orders/getOrders`, {
+                headers: {
+                    'Authorization': `Bearer ${resp.data.accessToken}`
+                }
+            }).then(async (respo) => {
+                if (respo.data.orders.length === 0) {
+                    await axios.post(`http://localhost:3001/order/${respo.data.id}`)
+                        .then(async (respi) => {
+                            console.log(respi.data)
+                            let activeOrder = respi.data.orders.filter(ord => ord.state === "carrito")
+                            dispatch(logIn())
+                            dispatch(getUserInfo(respi.data));
+                            dispatch(getActiveOrder(activeOrder))
+                            if (cart.length > 0) {
+                                cart.map(async (item) => {
+                                    let json = {
+                                        idOrder: activeOrder[0].id,
+                                        idProduct: item.id,
+                                        price: item.price,
+                                        amount: 1
                                     }
+                                    await axios.post(`http://localhost:3001/user/${respi.data.id}/cart`, json, {
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        }
+                                    })
                                 })
-                            })
-                            const rous = await axios.get(`http://localhost:3001/order/cart/${activeOrder[0].id}`)
-                                .then(respe => {
-                                    let products = Object.values(respe.data)
-                                    dispatch(getDbCart(products))
-                                    Swal.fire({
-                                        title: 'Usuario registrado correctamente',
-                                        width: 600,
-                                        padding: '3em',
-                                        background: 'url("https://i.imgur.com/4rsKgF2.jpg")',
-                                        backdrop: `
+                                await axios.get(`http://localhost:3001/order/cart/${activeOrder[0].id}`)
+                                    .then(respe => {
+                                        let products = Object.values(respe.data)
+                                        dispatch(getDbCart(products))
+                                        Swal.fire({
+                                            title: 'Usuario registrado correctamente',
+                                            width: 600,
+                                            padding: '3em',
+                                            background: 'url("https://i.imgur.com/4rsKgF2.jpg")',
+                                            backdrop: `
                                                           rgba(0,0,123,0.4)
                                                           url("https://sweetalert2.github.io/images/nyan-cat.gif")
                                                           left top
-                                                          no-repeat
-                                                        `
+                                                          no-repeat`
+                                        })
+                                        dispatch(resetCart())
+                                        history.push(`/user/${respi.data.id}/order`)
                                     })
-                                    dispatch(resetCart())
-                                    history.push(`/user/${respi.data.id}/order`)
-                                })
-                        } else {
-                            Swal.fire({
-                                title: 'Usuario registrado correctamente',
-                                width: 600,
-                                padding: '3em',
-                                background: 'url("https://i.imgur.com/4rsKgF2.jpg")',
-                                backdrop: `
+                            } else {
+                                Swal.fire({
+                                    title: 'Usuario registrado correctamente',
+                                    width: 600,
+                                    padding: '3em',
+                                    background: 'url("https://i.imgur.com/4rsKgF2.jpg")',
+                                    backdrop: `
                                                   rgba(0,0,123,0.4)
                                                   url("https://sweetalert2.github.io/images/nyan-cat.gif")
                                                   left top
-                                                  no-repeat
-                                                `
-                            })
-                            history.push(`/user/${respi.data.id}/order`)
-                        }    
-                    })
-                }else if(respo.data.orders.length > 0){
-                console.log(respo.data)
-                let activeOrder = respo.data.orders.filter(ord => ord.state === "carrito")
-                dispatch(logIn())
-                dispatch(getUserInfo(respo.data));
-                dispatch(getActiveOrder(activeOrder));
-               
-                const rusp = await axios.get(`http://localhost:3001/products/favorites/${respo.data.id}`)
-                    .then(async(repi) => {
-                        let favs = Object.values(repi.data)
-                        dispatch(getFavorites(favs))
-                        if (cart.length > 0) {
-                            cart.map(async (item) => {
-                                let json = {
-                                    idOrder: activeOrder[0].id,
-                                    idProduct: item.id,
-                                    price: item.price,
-                                    amount: 1
-                                }
-                                const res = await axios.post(`http://localhost:3001/user/${respo.data.id}/cart`, json, {
-                                    headers: {
-                                        'Content-Type': 'application/json'
+                                                  no-repeat`
+                                })
+                                history.push(`/user/${respi.data.id}/order`)
+                            }
+                        })
+                } else if (respo.data.orders.length > 0) {
+                    let activeOrder = respo.data.orders.filter(ord => ord.state === "carrito")
+                    dispatch(logIn())
+                    dispatch(getUserInfo(respo.data));
+                    dispatch(getActiveOrder(activeOrder));
+                    await axios.get(`http://localhost:3001/products/favorites/${respo.data.id}`)
+                        .then(async (repi) => {
+                            let favs = Object.values(repi.data)
+                            dispatch(getFavorites(favs))
+                            if (cart.length > 0) {
+                                cart.map(async (item) => {
+                                    let json = {
+                                        idOrder: activeOrder[0].id,
+                                        idProduct: item.id,
+                                        price: item.price,
+                                        amount: 1
                                     }
+                                    await axios.post(`http://localhost:3001/user/${respo.data.id}/cart`, json, {
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        }
+                                    })
                                 })
-                            })
-                            const rous = await axios.get(`http://localhost:3001/order/cart/${activeOrder[0].id}`)
-                                .then(resp => {
-                                    let products = Object.values(resp.data)
-                                    dispatch(getDbCart(products))
-                                    dispatch(resetCart())
-                                    history.push(`/user/${respo.data.id}/order`)
-                                })
-                        } else {
-                            history.push(`/user/${respo.data.id}/order`)
-                    }
-                })
-            }
+                                await axios.get(`http://localhost:3001/order/cart/${activeOrder[0].id}`)
+                                    .then(resp => {
+                                        let products = Object.values(resp.data)
+                                        dispatch(getDbCart(products))
+                                        dispatch(resetCart())
+                                        history.push(`/user/${respo.data.id}/order`)
+                                    })
+                            } else {
+                                history.push(`/user/${respo.data.id}/order`)
+                            }
+                        })
+                }
+            })
+
         })
-    
-    })
-}
-
-
-    const responseErrorGoogle = (response) => {
-        
     }
 
     const [lgShow, setLgShow] = useState(false);
     const [smShow, setSmShow] = useState(false);
-
     const [errors, setErrors] = useState({
         emailError: "",
         passwordError: true,
@@ -260,11 +247,10 @@ export default function Registro() {
             email: data.email,
             password: data.password
         }
-        const res = await axios.post('http://localhost:3001/user', json, {
+        await axios.post('http://localhost:3001/user', json, {
             headers: {
                 'Content-Type': 'application/json'
             }
-
         }).then(async (ris) => {
             if (typeof (ris.data) === "string") {
                 Swal.fire({
@@ -276,12 +262,12 @@ export default function Registro() {
                 })
             }
             dispatch(getToken(ris.data.accessToken))
-            const res = await axios.get(`http://localhost:3001/user/orders/getOrders`, {
+            await axios.get(`http://localhost:3001/user/orders/getOrders`, {
                 headers: {
                     'Authorization': `Bearer ${ris.data.accessToken}`
                 }
             }).then(async (respo) => {
-                const ras = await axios.post(`http://localhost:3001/order/${respo.data.id}`)
+                await axios.post(`http://localhost:3001/order/${respo.data.id}`)
                     .then(async (respi) => {
                         let activeOrder = respi.data.orders.filter(ord => ord.state === "carrito")
                         dispatch(logIn())
@@ -295,15 +281,14 @@ export default function Registro() {
                                     price: item.price,
                                     amount: 1
                                 }
-                                const res = await axios.post(`http://localhost:3001/user/${respi.data.id}/cart`, json, {
+                                await axios.post(`http://localhost:3001/user/${respi.data.id}/cart`, json, {
                                     headers: {
                                         'Content-Type': 'application/json'
                                     }
                                 })
                             })
                             dispatch(resetCart())
-                            console.log(activeOrder[0].id)
-                            const rous = await axios.get(`http://localhost:3001/order/cart/${activeOrder[0].id}`)
+                            await axios.get(`http://localhost:3001/order/cart/${activeOrder[0].id}`)
                                 .then(respe => {
                                     let products = Object.values(respe.data)
                                     dispatch(getDbCart(products))
@@ -337,17 +322,14 @@ export default function Registro() {
                             history.push(`/user/${respi.data.id}/order`)
                         }
                     })
-
             })
         })
-
     }
 
     const handleLogIn = (e) => {
         e.preventDefault();
         history.push('/user/login')
     }
-
 
     return (
         <div>
@@ -433,7 +415,6 @@ export default function Registro() {
                             buttonText="Iniciar Sesion"
                             onSuccess={responseSuccessGoogle}
                             isSignedIn={false}
-                            onFailure={responseErrorGoogle}
                             cookiePolicy={'single_host_origin'}
                         />
                     </div>

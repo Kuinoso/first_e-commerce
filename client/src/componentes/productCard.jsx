@@ -2,12 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { useDispatch, useSelector } from "react-redux";
-import { getAProduct, getProducts, getPID, getFavorites } from '../Redux/Actions/actions'
+import { getAProduct, getPID, getFavorites } from '../Redux/Actions/actions'
 import eHeart from './images/emp.png';
 import fHeart from './images/cl.png';
 import { Card } from 'react-bootstrap'
 
-// se crea diseño de productos en una card utilizando bootstrap
 export default function ProductCard(props) {
     const history = useHistory();
     const userData = useSelector(state => state.userId)
@@ -19,7 +18,6 @@ export default function ProductCard(props) {
     useEffect(() => {
         if (loggedIn === true) {
             async function makeRequests() {
-
                 await axios.get(`http://localhost:3001/products/favorites/${userData.id}`)
                     .then(resp => {
                         let faves = Object.values(resp.data)
@@ -30,6 +28,7 @@ export default function ProductCard(props) {
             makeRequests();
         }
     }, []);
+
     let prueba = []
     favis.forEach(it => {
         prueba.push(it.id)
@@ -51,9 +50,9 @@ export default function ProductCard(props) {
 
     const handleEH = async (e) => {
         e.preventDefault();
-        const res = await axios.post(`http://localhost:3001/products/${props.id}/favorites/${userData.id}`)
+        await axios.post(`http://localhost:3001/products/${props.id}/favorites/${userData.id}`)
             .then(async () => {
-                const reishh = await axios.get(`http://localhost:3001/products/favorites/${userData.id}`)
+                await axios.get(`http://localhost:3001/products/favorites/${userData.id}`)
                     .then(resp => {
                         let faves = Object.values(resp.data)
                         dispatch(getFavorites(faves));
@@ -65,9 +64,9 @@ export default function ProductCard(props) {
 
     const handleFH = async (e) => {
         e.preventDefault();
-        const res = await axios.delete(`http://localhost:3001/products/${props.id}/favorites/${userData.id}`)
+        await axios.delete(`http://localhost:3001/products/${props.id}/favorites/${userData.id}`)
             .then(async () => {
-                const reish = await axios.get(`http://localhost:3001/products/favorites/${userData.id}`)
+                await axios.get(`http://localhost:3001/products/favorites/${userData.id}`)
                     .then(resp => {
                         let faves = Object.values(resp.data)
                         dispatch(getFavorites(faves));
@@ -78,10 +77,7 @@ export default function ProductCard(props) {
                         }
                     })
             })
-
     }
-
-
 
     return (
         <Card class='card103' style={{ maxWidth: '25vw', boxShadow: '10px 10px 5px 0px rgba(0,0,0,0.35)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', marginBottom: '5vh' }}>

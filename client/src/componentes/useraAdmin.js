@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Axios from 'axios';
 import { Table } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
 import SuperSimpleNavbarAd from './SuperSimpleNavbarAdmin'
 import Swal from 'sweetalert2'
-import { useDispatch, useSelector } from "react-redux";
-
+import { useSelector } from "react-redux";
 
 export default function Promote() {
-  const history = useHistory();
   const userData = useSelector(state => state.userId);
   const [usuarios, setUsuarios] = useState({
     usuario: []
@@ -26,17 +23,13 @@ export default function Promote() {
         })
     }
     makeRequests();
-
-
-
   }, [])
-
 
   const btnAdmin = async (e) => {
     e.preventDefault();
-    const res = await Axios.put(`http://localhost:3001/user/${e.target.value}/Promote`)
-      .then(async (user) => {
-        const resDos = await Axios.get('http://localhost:3001/user')
+    await Axios.put(`http://localhost:3001/user/${e.target.value}/Promote`)
+      .then(async () => {
+        await Axios.get('http://localhost:3001/user')
           .then(users => {
             setUsuarios({
               ...usuarios,
@@ -48,21 +41,18 @@ export default function Promote() {
               title: 'Usuario modificado correctamente',
               showConfirmButton: false,
               timer: 1500
-            }).then(()=> {
+            }).then(() => {
               window.location.reload()
             })
-             
           })
       })
-
   }
-
 
   const btnUser = async (e) => {
     e.preventDefault();
-    const res = await Axios.put(`http://localhost:3001/user/${e.target.value}/Despromote`)
+    await Axios.put(`http://localhost:3001/user/${e.target.value}/Despromote`)
       .then(async (user) => {
-        const resDos = await Axios.get('http://localhost:3001/user')
+        await Axios.get('http://localhost:3001/user')
           .then(users => {
             setUsuarios({
               ...usuarios,
@@ -74,29 +64,24 @@ export default function Promote() {
               title: 'Usuario modificado correctamente',
               showConfirmButton: false,
               timer: 1500
-            }).then(()=> {
+            }).then(() => {
               window.location.reload()
             })
           })
       })
   }
 
- 
-  const users = usuarios.usuario.filter((user)=>{
-    if(user.id !== userData.id){
+  const users = usuarios.usuario.filter((user) => {
+    if (user.id !== userData.id) {
       return user
     }
   })
-  console.log(users)
-
-
 
   return (
     <div>
       <SuperSimpleNavbarAd />
       <div style={{ width: '70%', margin: 'auto' }}>
-
-        <Table striped bordered hover style={{backgroundColor: 'white'}}>
+        <Table striped bordered hover style={{ backgroundColor: 'white' }}>
           <thead>
             <tr>
               <th>Id</th>
@@ -127,23 +112,13 @@ export default function Promote() {
               <td>
                 {e.role === 'Admin' ? <button disabled={e.state === 'Baja'} className='bot' value={e.id} style={{ margin: "30px" }} onClick={btnUser}> User </button>
                   : <button disabled={e.state === 'Baja'} className='bot' value={e.id} style={{ margin: "30px" }} onClick={btnAdmin}> Admin </button>
-
                 }
-
               </td>
             </tr>
             )}
-
-
           </tbody>
-          
         </Table>
-
-
-
       </div>
     </div>
-
   )
-
 }
